@@ -37,33 +37,37 @@ class Formulario extends React.Component {
     render() {
       return (
         <form onSubmit={this.handleSubmit} class="jumbotron">
+            
+            <h1>Registro de laboratorio</h1>
             <div class="form-group">
-                <h1>Registro de laboratorio</h1>
-                <label  class="col-sm-2 col-form-label">
-                Ingrese el carnet:
-                    <input type="text" value={this.state.value} onChange={this.handleChange} class="form-control" />
-                </label>  
+            <label class="col-sm-2 col-form-label">Ingrese el carnet: </label>
+            <input class="form-control" type="text" ></input>
+            </div>
 
-                <label class="col-sm-2 col-form-label">
-                Seleccione el horario:
-                <select  class="form-control">
-                    <option value="lunes" >Lunes de 9:00 a 11.00</option>
-                    <option value="martes">Martes de 13:30 a 15:30</option>
-                    <option value="miercoles">Miércoles de 9:00 a 11.00</option>
-                    <option value="jueves">Jueves de 13:30 a 15:30</option>
-                    <option value="viernes">Viernes de 9:00 a 11.00</option>
-                    <option value="viernes">Viernes de 15:30 a 17:30</option>
+            <div class="form-group">
+                <label for="schedule">Seleccione el horario:</label>
+                <select name="schedule" class="form-control" id="schedule_field">
+                    <option>Lunes de 9:00 a 11.00</option>
+                    <option>Martes de 13:30 a 15:30</option>
+                    <option>Miércoles de 9:00 a 11.00</option>
+                    <option>Jueves de 13:30 a 15:30</option>
+                    <option>Viernes de 9:00 a 11.00</option>
+                    <option>Viernes de 15:30 a 17:30</option>
                 </select>
-                </label>  
-                
-                <label class="custom-control-label">
-                Llegó tarde?
-                <input type="checkbox" class = "custom-control-input"/>
-                </label> 
-
-                <button type="button" class="btn btn-danger" id="submit_btn"> Ingresar</button>         
+            </div>  
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="late_switch"></input>
+                    <label class="custom-control-label" for="late_switch">Llegó tarde? </label>
+                </div>
             </div>
             
+        
+            <div class="form-group">
+                <button type="button" class="btn btn-danger" id="submit_btn"> Ingresar</button>     
+            </div>
+    
         </form>
         );
     }
