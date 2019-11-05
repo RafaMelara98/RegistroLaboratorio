@@ -1,162 +1,77 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
 
-function Square(props) {
-  return (
-    <button
-      className="square"
-      onClick={() => {
-        props.onClick();
-      }}
-    >
-      {props.value}
-    </button>
-  );
-}
+class Formulario extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        isGoing: true,
+        numberOfGuests: 2
+      };
 
-class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { squares: Array(9).fill(null), xIsNext: true };
-  }
-  renderSquare(i) {
-    return (
-      <Square
-        value={this.props.squares[i]}
-        onClick={() => {
-          this.props.onClick(i);
-        }}
-      />
-    );
-  }
-
- 
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
-}
-
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ],
-      xIsNext: true,
-      stepNumber: 0
-    };
-  }
-
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
-  }
-
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleInputChange = this.handleInputChange.bind(this);
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
-    });
-  }
+  
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value
+        });
+    }
 
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    handleChange(event) {
+      this.setState({value: event.target.value});
+    }
+  
+    handleSubmit(event) {
+      alert('A name was submitted: ' + this.state.value);
+      event.preventDefault();
+    }
+  
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit} class="jumbotron">
+            <div class="form-group">
+                <h1>Registro de laboratorio</h1>
+                <label  class="col-sm-2 col-form-label">
+                Ingrese el carnet:
+                    <input type="text" value={this.state.value} onChange={this.handleChange} class="form-control" />
+                </label>  
 
-    const moves = history.map((step, move) => {
-        const desc = move ?
-          'Go to move #' + move :
-          'Go to game start';
-        return (
-          <li key99={move}>
-            <button onClick={() => this.jumpTo(move)}>{desc}</button>
-          </li>
+                <label class="col-sm-2 col-form-label">
+                Seleccione el horario:
+                <select  class="form-control">
+                    <option value="lunes" >Lunes de 9:00 a 11.00</option>
+                    <option value="martes">Martes de 13:30 a 15:30</option>
+                    <option value="miercoles">Miércoles de 9:00 a 11.00</option>
+                    <option value="jueves">Jueves de 13:30 a 15:30</option>
+                    <option value="viernes">Viernes de 9:00 a 11.00</option>
+                    <option value="viernes">Viernes de 15:30 a 17:30</option>
+                </select>
+                </label>  
+                
+                <label class="custom-control-label">
+                Llegó tarde?
+                <input type="checkbox" class = "custom-control-input"/>
+                </label> 
+
+                <button type="button" class="btn btn-danger" id="submit_btn"> Ingresar</button>         
+            </div>
+            
+        </form>
         );
-      });
-
-
-    let status;
-    if (winner) {
-      status = "Winner: " + winner;
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board
-            squares={current.squares}
-            onClick={i => {
-              this.handleClick(i);
-            }}
-          />
-        </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
-      </div>
-    );
-  }
 }
 
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
-
-// ========================================
-
-ReactDOM.render(<Game />, document.getElementById("root"));
+//main
+ReactDOM.render(
+    <Formulario />,
+    document.getElementById('root')
+  );
 
